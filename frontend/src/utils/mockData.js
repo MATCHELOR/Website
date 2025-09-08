@@ -13,7 +13,7 @@ export const mockMessages = [
   },
   {
     id: 3,
-    text: "I'm ChatGPT, an AI assistant created by OpenAI. I can help you with a wide variety of tasks including:\n\n• Answering questions and providing explanations\n• Writing and editing text\n• Code assistance and programming help\n• Creative writing and brainstorming\n• Analysis and research\n• Math and problem-solving\n• Language translation\n• And much more!\n\nFeel free to ask me anything you'd like help with!",
+    text: "I'm Matchelor, an AI assistant for real estate. I can help you with a wide variety of property-related tasks including:\n\n• Finding properties in specific neighborhoods\n• Answering questions about home buying process\n• Mortgage calculations and affordability\n• Property viewing guidance\n• Market analysis and research\n• Investment property evaluation\n• Legal documentation assistance\n• And much more!\n\nFeel free to ask me anything you'd like help with regarding real estate!",
     sender: "ai",
     timestamp: "10:31 AM"
   },
