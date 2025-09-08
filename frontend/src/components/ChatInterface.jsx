@@ -439,10 +439,10 @@ const ChatInterface = () => {
         <div className="flex-1 overflow-hidden">
           {messages.length === 0 ? (
             /* Welcome Screen */
-            <div className="h-full flex flex-col justify-center px-8">
+            <div className="h-full flex flex-col items-center justify-center px-4">
               <div className="max-w-4xl w-full">
                 {/* Welcome Message */}
-                <div className="mb-16">
+                <div className="text-center mb-16">
                   <h1 className="text-5xl font-semibold text-gray-900 mb-3">
                     Hi there, <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">John</span>
                   </h1>
@@ -460,8 +460,8 @@ const ChatInterface = () => {
                     >
                       <CardContent className="p-6">
                         <div className="flex items-start gap-4">
-                          <div className="text-3xl">{card.icon}</div>
-                          <p className="text-base text-gray-700 font-medium leading-relaxed">
+                          <div className="text-2xl">{card.icon}</div>
+                          <p className="text-sm text-gray-700 font-medium leading-relaxed">
                             {card.title}
                           </p>
                         </div>
@@ -471,7 +471,7 @@ const ChatInterface = () => {
                 </div>
 
                 {/* Refresh Prompts */}
-                <div>
+                <div className="text-center">
                   <Button 
                     variant="outline" 
                     size="sm"
