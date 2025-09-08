@@ -589,7 +589,7 @@ const ChatInterface = () => {
         </div>
       </div>
 
-      {/* Modals */}
+      {/* Modals and Dialogs */}
       <SettingsModal 
         isOpen={settingsOpen} 
         onClose={() => setSettingsOpen(false)} 
@@ -599,6 +599,54 @@ const ChatInterface = () => {
         isOpen={profileOpen} 
         onClose={() => setProfileOpen(false)} 
       />
+
+      {/* Delete Individual Chat Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              Delete Chat
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this chat? This action cannot be undone and all messages in this conversation will be permanently deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDeleteChat}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete Chat
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete All Chats Confirmation Dialog */}
+      <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-red-500" />
+              Clear All Chat History
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete all {chatHistory.length} chats? This action cannot be undone and all your conversation history will be permanently deleted.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDeleteAllChats}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete All Chats
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
