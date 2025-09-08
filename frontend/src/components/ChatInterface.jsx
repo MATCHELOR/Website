@@ -27,6 +27,10 @@ const ChatInterface = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
   const [chatToDelete, setChatToDelete] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const fileInputRef = useRef(null);
+  const imageInputRef = useRef(null);
   const messagesEndRef = useRef(null);
   const { toast } = useToast();
 
