@@ -381,7 +381,7 @@ const ChatInterface = () => {
       {/* App Download Section */}
       <div className="p-3 border-t border-gray-100">
         <div className="mb-3">
-          <p className="text-xs text-gray-500 mb-2 text-center">Download our mobile app</p>
+          <p className="text-xs text-gray-500 mb-2 text-left">Download our mobile app</p>
           <div className="space-y-2">
             {/* App Store Button */}
             <button
