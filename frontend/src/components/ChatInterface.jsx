@@ -199,7 +199,7 @@ const ChatInterface = () => {
   };
 
   const deleteChat = async (chatId, e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     
     try {
       await chatAPI.deleteChat(chatId);
@@ -223,6 +223,51 @@ const ChatInterface = () => {
         variant: "destructive"
       });
     }
+  };
+
+  const handleDeleteClick = (chatId, e) => {
+    e.stopPropagation();
+    setChatToDelete(chatId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteChat = () => {
+    if (chatToDelete) {
+      deleteChat(chatToDelete);
+      setDeleteDialogOpen(false);
+      setChatToDelete(null);
+    }
+  };
+
+  const deleteAllChats = async () => {
+    try {
+      // Delete all chats
+      const deletePromises = chatHistory.map(chat => chatAPI.deleteChat(chat.id));
+      await Promise.all(deletePromises);
+      
+      // Clear local state
+      setChatHistory([]);
+      setCurrentChatId(null);
+      setMessages([]);
+      
+      toast({
+        title: "All chats deleted",
+        description: "All chat history has been cleared",
+      });
+      
+    } catch (error) {
+      console.error('Error deleting all chats:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete all chats",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const confirmDeleteAllChats = () => {
+    deleteAllChats();
+    setDeleteAllDialogOpen(false);
   };
 
   const Sidebar = () => (
