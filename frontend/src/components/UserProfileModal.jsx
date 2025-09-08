@@ -17,7 +17,7 @@ import { useToast } from "../hooks/use-toast";
 const UserProfileModal = ({ isOpen, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: "ChatGPT User",
+    name: "Matchelor User",
     email: "user@example.com",
     joinDate: "January 2025",
     plan: "Free Plan",
