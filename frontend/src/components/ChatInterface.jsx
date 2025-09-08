@@ -624,7 +624,7 @@ const ChatInterface = () => {
             </div>
             
             <p className="text-xs text-gray-400 text-center mt-3">
-              Matchelor can make mistakes. Check important info.
+              By using Matchelor, you agree to our Terms of Service and Privacy Policy.
             </p>
           </div>
         </div>
