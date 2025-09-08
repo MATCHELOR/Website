@@ -574,7 +574,7 @@ const UserProfileModal = ({ isOpen, onClose }) => {
         </Tabs>
 
         {/* Action Buttons */}
-        <div className="border-t pt-4 flex justify-between">
+        <div className="border-t pt-4 pb-4 flex justify-between">
           <div className="flex gap-2">
             <Button variant="outline" onClick={handleBillingSettings}>
               <CreditCard size={16} className="mr-2" />
