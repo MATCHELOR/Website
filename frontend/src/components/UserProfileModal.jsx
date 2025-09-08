@@ -18,9 +18,10 @@ import { useToast } from "../hooks/use-toast";
 
 const UserProfileModal = ({ isOpen, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
   const [userInfo, setUserInfo] = useState({
-    name: "Matchelor User",
-    email: "user@example.com",
+    name: "John",
+    email: "john@example.com",
     joinDate: "January 2025",
     plan: "Free Plan",
     avatar: ""
@@ -33,6 +34,21 @@ const UserProfileModal = ({ isOpen, onClose }) => {
     tokensLimit: 10000,
     requestsToday: 0,
     requestsLimit: 100
+  });
+  const [billingInfo, setBillingInfo] = useState({
+    plan: "Free Plan",
+    nextBilling: "N/A",
+    amount: "$0.00",
+    paymentMethod: "None",
+    billingHistory: [
+      { date: "Dec 2024", amount: "$0.00", status: "Free Plan", description: "Free usage" },
+    ]
+  });
+  const [accountSettings, setAccountSettings] = useState({
+    emailNotifications: true,
+    marketingEmails: false,
+    dataCollection: true,
+    twoFactorAuth: false
   });
   const { toast } = useToast();
 
