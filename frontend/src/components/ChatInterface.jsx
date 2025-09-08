@@ -412,7 +412,7 @@ const ChatInterface = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="border-b border-gray-100 px-4 py-3 flex items-center justify-between bg-white">
+        <div className="px-4 py-3 flex items-center justify-between bg-white">
           <div className="flex items-center gap-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
