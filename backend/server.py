@@ -57,7 +57,7 @@ def format_timestamp(dt: datetime) -> str:
 
 @api_router.get("/")
 async def root():
-    return {"message": "ChatGPT Clone API is running!"}
+    return {"message": "Matchelor Real Estate AI API is running!"}
 
 # Chat Management Endpoints
 @api_router.post("/chats", response_model=ChatModel)
