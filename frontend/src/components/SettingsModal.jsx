@@ -429,7 +429,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
             <TabsContent value="about" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">About ChatGPT Clone</CardTitle>
+                  <CardTitle className="text-lg">About Matchelor</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
