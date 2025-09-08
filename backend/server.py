@@ -210,7 +210,8 @@ async def send_message(chat_id: str, request: MessageCreateRequest):
         ai_response_text = await ai_service.chat_with_ai(
             message=request.message,
             chat_history=recent_messages,
-            session_id=request.sessionId or chat_id
+            session_id=request.sessionId or chat_id,
+            model=request.model
         )
 
         # Create AI message
