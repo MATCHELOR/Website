@@ -117,10 +117,17 @@ async def get_chat(chat_id: str):
         messages_cursor = db.messages.find({"chatId": chat_id}).sort("timestamp", 1)
         messages = await messages_cursor.to_list(1000)
         
+        # Remove MongoDB ObjectId fields to avoid serialization issues
+        clean_messages = []
+        for msg in messages:
+            if '_id' in msg:
+                del msg['_id']
+            clean_messages.append(msg)
+        
         return {
             "id": chat["id"],
             "title": chat["title"],
-            "messages": messages
+            "messages": clean_messages
         }
     except HTTPException:
         raise
