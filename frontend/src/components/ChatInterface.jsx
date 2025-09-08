@@ -576,13 +576,17 @@ const ChatInterface = () => {
                         onClick={() => handleSendMessage()}
                         disabled={!inputValue.trim() || isTyping}
                         size="sm"
-                        className="h-10 w-10 p-0 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100"
+                        className="h-10 w-10 p-0 rounded-full disabled:bg-gray-100"
                         variant="secondary"
+                        style={{ 
+                          backgroundColor: (!inputValue.trim() || isTyping) ? '' : '#153009',
+                          color: (!inputValue.trim() || isTyping) ? '' : 'white'
+                        }}
                       >
                         {isTyping ? (
                           <Loader2 size={18} className="animate-spin text-gray-600" />
                         ) : (
-                          <Send size={18} className="text-gray-600" />
+                          <Send size={18} className={(!inputValue.trim() || isTyping) ? "text-gray-600" : "text-white"} />
                         )}
                       </Button>
                     </div>
