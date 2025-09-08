@@ -421,7 +421,6 @@ const ChatInterface = () => {
                 </Button>
               </SheetTrigger>
             </Sheet>
-            <h1 className="text-lg font-semibold text-gray-900">Matchelor</h1>
           </div>
           <div className="flex items-center gap-2">
             {/* Clear History Button (visible when there are messages) */}
