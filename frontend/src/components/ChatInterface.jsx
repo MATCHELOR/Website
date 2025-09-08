@@ -453,10 +453,10 @@ const ChatInterface = () => {
               <div className="max-w-4xl w-full">
                 {/* Welcome Message */}
                 <div className="text-center mb-16">
-                  <h1 className="text-5xl font-semibold text-gray-900 mb-3">
+                  <h1 className="text-xl font-bold text-gray-700 mb-3">
                     Hi there, John
                   </h1>
-                  <h2 className="text-xl font-bold text-gray-700 mb-4">How may I help you today?</h2>
+                  <h2 className="text-5xl font-semibold text-gray-900 mb-4">How may I help you today?</h2>
                   <div className="text-base text-gray-500">
                     <p>I can help you find properties and answer questions about real estate.</p>
                     <p>I also provide personalized recommendations.</p>
