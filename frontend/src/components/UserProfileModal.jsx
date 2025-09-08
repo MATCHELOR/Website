@@ -180,7 +180,7 @@ const UserProfileModal = ({ isOpen, onClose }) => {
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
-          <div className="overflow-y-auto max-h-[60vh] mt-4">
+          <div className="overflow-y-auto max-h-[60vh] mt-4 pb-8">
             <TabsContent value="profile" className="space-y-6">
               {/* Profile Header */}
               <Card>
