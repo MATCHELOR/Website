@@ -418,7 +418,7 @@ const ChatInterface = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => setDeleteDialogOpen(true)}
+                onClick={clearCurrentChat}
                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
               >
                 <Trash2 size={16} className="mr-1" />
