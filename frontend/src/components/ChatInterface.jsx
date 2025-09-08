@@ -469,8 +469,8 @@ const ChatInterface = () => {
                       onClick={() => handleSuggestionClick(card)}
                     >
                       <CardContent className="p-4">
-                        <div className="flex flex-col items-center text-center gap-2">
-                          <div className="text-xl">{card.icon}</div>
+                        <div className="flex items-start gap-3">
+                          <div className="text-xl flex-shrink-0">{card.icon}</div>
                           <p className="text-xs text-gray-700 font-medium leading-relaxed">
                             {card.title}
                           </p>
