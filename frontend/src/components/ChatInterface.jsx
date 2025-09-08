@@ -455,14 +455,16 @@ const ChatInterface = () => {
                   {suggestionCards.map((card, index) => (
                     <Card 
                       key={index} 
-                      className="cursor-pointer hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 aspect-square flex items-center justify-center"
+                      className="cursor-pointer hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300"
                       onClick={() => handleSuggestionClick(card)}
                     >
-                      <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-                        <div className="text-3xl mb-4">{card.icon}</div>
-                        <p className="text-base text-gray-700 font-medium leading-relaxed">
-                          {card.title}
-                        </p>
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="text-3xl">{card.icon}</div>
+                          <p className="text-base text-gray-700 font-medium leading-relaxed">
+                            {card.title}
+                          </p>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
