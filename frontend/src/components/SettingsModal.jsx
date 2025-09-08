@@ -424,47 +424,6 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 </CardContent>
               </Card>
             </TabsContent>
-
-            <TabsContent value="about" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">About Matchelor</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      A pixel-perfect Matchelor real estate AI assistant built with React, FastAPI, and MongoDB.
-                      Powered by Emergent AI with support for multiple language models.
-                    </p>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <Label className="font-medium">Version</Label>
-                      <p className="text-gray-600 dark:text-gray-400">1.0.0</p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">Built with</Label>
-                      <p className="text-gray-600 dark:text-gray-400">React + FastAPI</p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">AI Provider</Label>
-                      <p className="text-gray-600 dark:text-gray-400">Emergent Universal Key</p>
-                    </div>
-                    <div>
-                      <Label className="font-medium">Database</Label>
-                      <p className="text-gray-600 dark:text-gray-400">MongoDB</p>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-4 border-t">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      © 2025 Matchelor. Built with ❤️ using Emergent AI.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
           </div>
         </Tabs>
       </DialogContent>
