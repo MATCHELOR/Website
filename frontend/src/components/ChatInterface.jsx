@@ -270,6 +270,13 @@ const ChatInterface = () => {
     setDeleteAllDialogOpen(false);
   };
 
+  const clearCurrentChat = () => {
+    if (currentChatId) {
+      setChatToDelete(currentChatId);
+      setDeleteDialogOpen(true);
+    }
+  };
+
   const Sidebar = () => (
     <div className="w-64 bg-white border-r border-gray-100 flex flex-col h-full">
       {/* Sidebar Header */}
