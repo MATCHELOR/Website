@@ -434,7 +434,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 <CardContent className="space-y-4">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      A pixel-perfect ChatGPT clone built with React, FastAPI, and MongoDB.
+                      A pixel-perfect Matchelor real estate AI assistant built with React, FastAPI, and MongoDB.
                       Powered by Emergent AI with support for multiple language models.
                     </p>
                   </div>
