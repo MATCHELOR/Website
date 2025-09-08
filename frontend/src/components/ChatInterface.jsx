@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Plus, User, Settings, Menu, MessageSquare, Edit3, Trash2, Loader2 } from "lucide-react";
+import { Send, Plus, User, Settings, Menu, MessageSquare, Edit3, Trash2, Loader2, Paperclip, Image } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { Separator } from "./ui/separator";
+import { Card, CardContent } from "./ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { chatAPI } from "../utils/api";
 import { useToast } from "../hooks/use-toast";
@@ -24,6 +24,25 @@ const ChatInterface = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const { toast } = useToast();
+
+  const suggestionCards = [
+    {
+      title: "Write a to-do list for a personal project or task",
+      icon: "📝"
+    },
+    {
+      title: "Generate an email or reply to a job offer",
+      icon: "✉️"
+    },
+    {
+      title: "Summarize this article or text for me in one paragraph",
+      icon: "📄"
+    },
+    {
+      title: "How does AI work in a technical capacity",
+      icon: "🤖"
+    }
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,21 +79,20 @@ const ChatInterface = () => {
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isTyping) return;
+  const handleSendMessage = async (messageText = null) => {
+    const textToSend = messageText || inputValue;
+    if (!textToSend.trim() || isTyping) return;
 
     // If no current chat, create one first
     if (!currentChatId) {
       await startNewChat();
-      // Don't return here, let the message be sent to the new chat
     }
 
-    const messageText = inputValue;
-    setInputValue("");
+    if (!messageText) setInputValue("");
     setIsTyping(true);
 
     try {
-      const response = await chatAPI.sendMessage(currentChatId, messageText);
+      const response = await chatAPI.sendMessage(currentChatId, textToSend);
       
       // Add both user message and AI response to messages
       setMessages(prev => [
@@ -104,8 +122,8 @@ const ChatInterface = () => {
         variant: "destructive"
       });
       
-      // Put the message back in the input field
-      setInputValue(messageText);
+      // Put the message back in the input field if it was typed
+      if (!messageText) setInputValue(textToSend);
     } finally {
       setIsTyping(false);
     }
@@ -116,6 +134,10 @@ const ChatInterface = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    handleSendMessage(suggestion.title);
   };
 
   const startNewChat = async () => {
@@ -172,15 +194,12 @@ const ChatInterface = () => {
   };
 
   const deleteChat = async (chatId, e) => {
-    e.stopPropagation(); // Prevent chat selection when deleting
+    e.stopPropagation();
     
     try {
       await chatAPI.deleteChat(chatId);
-      
-      // Remove from chat history
       setChatHistory(prev => prev.filter(chat => chat.id !== chatId));
       
-      // If we deleted the current chat, clear messages and reset current chat
       if (currentChatId === chatId) {
         setCurrentChatId(null);
         setMessages([]);
@@ -202,49 +221,45 @@ const ChatInterface = () => {
   };
 
   const Sidebar = () => (
-    <div className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
-      <div className="p-4">
+    <div className="w-64 bg-white border-r border-gray-100 flex flex-col h-full">
+      {/* Sidebar Header */}
+      <div className="p-3 border-b border-gray-100">
         <Button 
           onClick={startNewChat} 
           disabled={isLoading}
-          className="w-full flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+          variant="ghost"
+          className="w-full justify-start text-sm font-normal px-3 py-2 h-auto"
         >
-          {isLoading ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : (
-            <Plus size={16} />
-          )}
-          New Chat
+          <Plus size={16} className="mr-2" />
+          New chat
         </Button>
       </div>
       
-      <ScrollArea className="flex-1 px-4">
+      {/* Chat History */}
+      <ScrollArea className="flex-1">
         {isLoadingChats ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="animate-spin" size={24} />
+            <Loader2 className="animate-spin" size={20} />
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="p-2">
             {chatHistory.map((chat) => (
               <div
                 key={chat.id}
                 onClick={() => selectChat(chat.id)}
-                className={`group p-3 rounded-lg cursor-pointer transition-colors ${
+                className={`group px-3 py-2 rounded-lg cursor-pointer transition-colors text-sm mb-1 ${
                   currentChatId === chat.id
-                    ? "bg-gray-200 dark:bg-gray-700"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                    ? "bg-gray-100"
+                    : "hover:bg-gray-50"
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                    <p className="text-gray-900 truncate font-medium">
                       {chat.title}
-                    </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                      {chat.preview}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -255,59 +270,31 @@ const ChatInterface = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="flex items-center justify-between mt-1">
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
-                    {chat.timestamp}
-                  </span>
-                  {chat.messageCount > 0 && (
-                    <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">
-                      {chat.messageCount}
-                    </span>
-                  )}
-                </div>
               </div>
             ))}
-            
-            {chatHistory.length === 0 && !isLoadingChats && (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                <MessageSquare size={32} className="mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No chats yet</p>
-                <p className="text-xs">Start a new conversation!</p>
-              </div>
-            )}
           </div>
         )}
       </ScrollArea>
       
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+      {/* Sidebar Footer */}
+      <div className="p-3 border-t border-gray-100">
         <div 
-          className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
+          className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
           onClick={() => setProfileOpen(true)}
         >
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>
-              <User size={16} />
+          <Avatar className="h-7 w-7">
+            <AvatarFallback className="bg-orange-500 text-white text-xs">
+              J
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 dark:text-white">User</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Free Plan</p>
-          </div>
-          <Settings 
-            size={16} 
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer" 
-            onClick={(e) => {
-              e.stopPropagation();
-              setSettingsOpen(true);
-            }}
-          />
+          <span className="text-sm font-medium text-gray-900">John</span>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="h-screen flex bg-white dark:bg-gray-900">
+    <div className="h-screen flex bg-white">
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
         <Sidebar />
@@ -320,10 +307,10 @@ const ChatInterface = () => {
         </SheetContent>
       </Sheet>
 
-      {/* Main Chat Area */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between bg-white dark:bg-gray-900">
+        <div className="border-b border-gray-100 px-4 py-3 flex items-center justify-between bg-white">
           <div className="flex items-center gap-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
@@ -332,12 +319,7 @@ const ChatInterface = () => {
                 </Button>
               </SheetTrigger>
             </Sheet>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
-                <MessageSquare size={16} className="text-white" />
-              </div>
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">ChatGPT</h1>
-            </div>
+            <h1 className="text-lg font-semibold text-gray-900">ChatGPT</h1>
           </div>
           <div className="flex items-center gap-2">
             <Button 
@@ -347,134 +329,188 @@ const ChatInterface = () => {
             >
               <Settings size={16} />
             </Button>
-            <Avatar 
-              className="h-8 w-8 cursor-pointer"
-              onClick={() => setProfileOpen(true)}
-            >
-              <AvatarFallback>
-                <User size={16} />
-              </AvatarFallback>
-            </Avatar>
           </div>
         </div>
 
         {/* Messages Area */}
-        <ScrollArea className="flex-1 p-4">
-          <div className="max-w-3xl mx-auto space-y-6">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="animate-spin" size={32} />
-              </div>
-            ) : messages.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MessageSquare size={24} className="text-white" />
+        <div className="flex-1 overflow-hidden">
+          {messages.length === 0 ? (
+            /* Welcome Screen */
+            <div className="h-full flex flex-col items-center justify-center px-4">
+              <div className="max-w-3xl w-full">
+                {/* Welcome Message */}
+                <div className="text-center mb-12">
+                  <h1 className="text-4xl font-semibold text-gray-900 mb-2">
+                    Hi there, <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">John</span>
+                  </h1>
+                  <p className="text-xl text-gray-600 font-medium">What would you like to know?</p>
+                  <p className="text-sm text-gray-500 mt-2">Use one of the most common prompts below or use your own to begin</p>
                 </div>
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
-                  How can I help you today?
-                </h2>
-                <p className="text-gray-500 dark:text-gray-400">
-                  Start a conversation with ChatGPT
-                </p>
+
+                {/* Suggestion Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  {suggestionCards.map((card, index) => (
+                    <Card 
+                      key={index} 
+                      className="cursor-pointer hover:shadow-md transition-shadow border border-gray-200 hover:border-gray-300"
+                      onClick={() => handleSuggestionClick(card)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="text-2xl">{card.icon}</div>
+                          <p className="text-sm text-gray-700 font-medium leading-relaxed">
+                            {card.title}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Refresh Prompts */}
+                <div className="text-center">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="text-gray-600 border-gray-200"
+                    onClick={() => {
+                      toast({
+                        title: "Refreshed!",
+                        description: "New prompts coming soon",
+                      });
+                    }}
+                  >
+                    🔄 Refresh Prompts
+                  </Button>
+                </div>
               </div>
-            ) : (
-              messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex gap-4 message-bubble ${
-                    message.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {message.sender === "ai" && (
+            </div>
+          ) : (
+            /* Chat Messages */
+            <ScrollArea className="h-full p-4">
+              <div className="max-w-3xl mx-auto space-y-6">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex gap-4 ${
+                      message.sender === "user" ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {message.sender === "ai" && (
+                      <Avatar className="h-8 w-8 mt-1">
+                        <AvatarFallback className="bg-green-500 text-white text-xs">
+                          AI
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        message.sender === "user"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-100 text-gray-900"
+                      }`}
+                    >
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
+                      <span className="text-xs opacity-70 mt-2 block">
+                        {message.timestamp}
+                      </span>
+                    </div>
+                    {message.sender === "user" && (
+                      <Avatar className="h-8 w-8 mt-1">
+                        <AvatarFallback className="bg-blue-500 text-white text-xs">
+                          J
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="flex gap-4 justify-start">
                     <Avatar className="h-8 w-8 mt-1">
-                      <AvatarFallback className="bg-gradient-to-br from-green-400 to-blue-500 text-white">
+                      <AvatarFallback className="bg-green-500 text-white text-xs">
                         AI
                       </AvatarFallback>
                     </Avatar>
-                  )}
-                  <div
-                    className={`max-w-[70%] rounded-2xl px-4 py-3 ${
-                      message.sender === "user"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
-                    }`}
-                  >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
-                    <span className="text-xs opacity-70 mt-1 block">
-                      {message.timestamp}
-                    </span>
+                    <div className="bg-gray-100 rounded-2xl px-4 py-3">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
+                    </div>
                   </div>
-                  {message.sender === "user" && (
-                    <Avatar className="h-8 w-8 mt-1">
-                      <AvatarFallback className="bg-blue-500 text-white">
-                        <User size={16} />
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                </div>
-              ))
-            )}
-            
-            {isTyping && (
-              <div className="flex gap-4 justify-start">
-                <Avatar className="h-8 w-8 mt-1">
-                  <AvatarFallback className="bg-gradient-to-br from-green-400 to-blue-500 text-white">
-                    AI
-                  </AvatarFallback>
-                </Avatar>
-                <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
+                )}
+                <div ref={messagesEndRef} />
               </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
+            </ScrollArea>
+          )}
+        </div>
 
         {/* Input Area */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+        <div className="border-t border-gray-100 p-4 bg-white">
           <div className="max-w-3xl mx-auto">
-            <div className="flex gap-2 items-end">
-              <div className="flex-1 relative">
-                <Input
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Message ChatGPT..."
-                  disabled={isTyping}
-                  className="pr-12 py-3 text-sm border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl bg-white dark:bg-gray-800"
-                />
+            <div className="relative">
+              <Input
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Ask whatever you want..."
+                disabled={isTyping}
+                className="pr-20 pl-12 py-4 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100"
+              />
+              
+              {/* Left icons */}
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                 <Button
-                  onClick={handleSendMessage}
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 hover:bg-gray-200"
+                  onClick={() => toast({ title: "Feature coming soon!", description: "File attachment will be available soon" })}
+                >
+                  <Paperclip size={16} className="text-gray-400" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 hover:bg-gray-200"
+                  onClick={() => toast({ title: "Feature coming soon!", description: "Image upload will be available soon" })}
+                >
+                  <Image size={16} className="text-gray-400" />
+                </Button>
+              </div>
+
+              {/* Send button */}
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <Button
+                  onClick={() => handleSendMessage()}
                   disabled={!inputValue.trim() || isTyping}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 rounded-lg"
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100"
+                  variant="secondary"
                 >
                   {isTyping ? (
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={16} className="animate-spin text-gray-600" />
                   ) : (
-                    <Send size={16} />
+                    <Send size={16} className="text-gray-600" />
                   )}
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
-              ChatGPT can make mistakes. Check important info. Powered by Emergent AI.
+            
+            <p className="text-xs text-gray-400 text-center mt-3">
+              ChatGPT can make mistakes. Check important info.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Settings Modal */}
+      {/* Modals */}
       <SettingsModal 
         isOpen={settingsOpen} 
         onClose={() => setSettingsOpen(false)} 
       />
-
-      {/* User Profile Modal */}
+      
       <UserProfileModal 
         isOpen={profileOpen} 
         onClose={() => setProfileOpen(false)} 
