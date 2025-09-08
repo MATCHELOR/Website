@@ -454,9 +454,8 @@ const ChatInterface = () => {
                 {/* Welcome Message */}
                 <div className="text-center mb-16">
                   <h1 className="text-5xl font-semibold text-gray-900 mb-3">
-                    Hi there, <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">John</span>
+                    Hi there, John
                   </h1>
-                  <p className="text-2xl text-gray-700 font-medium mb-3">How may I help you today?</p>
                   <p className="text-base text-gray-500">I can help you find properties, answer questions about real estate, and provide personalized recommendations.</p>
                 </div>
 
