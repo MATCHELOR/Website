@@ -446,7 +446,7 @@ const ChatInterface = () => {
                   <h1 className="text-5xl font-semibold text-gray-900 mb-3">
                     Hi there, <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">John</span>
                   </h1>
-                  <p className="text-2xl text-gray-700 font-medium mb-3">What would you like to know?</p>
+                  <p className="text-2xl text-gray-700 font-medium mb-3">How may I help you today?</p>
                   <p className="text-base text-gray-500">Use one of the most common prompts below or use your own to begin</p>
                 </div>
 
