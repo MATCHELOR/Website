@@ -281,6 +281,37 @@ const ChatInterface = () => {
     }
   };
 
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles(prev => [...prev, ...files]);
+    toast({
+      title: "Files selected",
+      description: `${files.length} file(s) ready to attach`,
+    });
+  };
+
+  const handleImageSelect = (e) => {
+    const images = Array.from(e.target.files);
+    setSelectedImages(prev => [...prev, ...images]);
+    toast({
+      title: "Images selected",
+      description: `${images.length} image(s) ready to attach`,
+    });
+  };
+
+  const removeFile = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeImage = (index) => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const clearAllAttachments = () => {
+    setSelectedFiles([]);
+    setSelectedImages([]);
+  };
+
   const Sidebar = () => (
     <div className="w-64 bg-white border-r border-gray-100 flex flex-col h-full">
       {/* Sidebar Header with Logo */}
