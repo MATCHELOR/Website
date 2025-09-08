@@ -406,6 +406,18 @@ const ChatInterface = () => {
             <h1 className="text-lg font-semibold text-gray-900">ChatGPT</h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Clear History Button (visible when there are messages) */}
+            {messages.length > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setDeleteDialogOpen(true)}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <Trash2 size={16} className="mr-1" />
+                Clear
+              </Button>
+            )}
             <Button 
               variant="ghost" 
               size="sm"
