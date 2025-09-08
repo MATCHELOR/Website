@@ -1,83 +1,83 @@
 {
   "summary": {
-    "passed": 11,
-    "failed": 1,
+    "passed": 12,
+    "failed": 0,
     "total": 12,
-    "success_rate": 91.66666666666666
+    "success_rate": 100.0
   },
   "tests": [
     {
       "test": "API Health Check",
       "success": true,
       "details": "Status: 200, Message: ChatGPT Clone API is running!",
-      "timestamp": "2025-09-08T03:58:04.970430"
+      "timestamp": "2025-09-08T03:59:46.932371"
     },
     {
       "test": "Create Chat",
       "success": true,
-      "details": "Chat ID: e928bf7c-2f8d-493e-8307-38f1124e5878, Title: Test Chat Session",
-      "timestamp": "2025-09-08T03:58:05.496029"
+      "details": "Chat ID: 1c8abc70-795f-4f58-9ff2-a6052ba643a1, Title: Test Chat Session",
+      "timestamp": "2025-09-08T03:59:47.442381"
     },
     {
       "test": "Get All Chats",
       "success": true,
-      "details": "Found 1 chats, Created chat found: True",
-      "timestamp": "2025-09-08T03:58:06.011799"
+      "details": "Found 2 chats, Created chat found: True",
+      "timestamp": "2025-09-08T03:59:47.953318"
     },
     {
       "test": "Get Specific Chat",
       "success": true,
       "details": "Chat details retrieved, Messages count: 0",
-      "timestamp": "2025-09-08T03:58:06.521966"
+      "timestamp": "2025-09-08T03:59:48.464942"
     },
     {
       "test": "Update Chat Title",
       "success": true,
       "details": "Title updated to: Updated Test Chat Title",
-      "timestamp": "2025-09-08T03:58:07.032178"
+      "timestamp": "2025-09-08T03:59:48.975297"
     },
     {
       "test": "Send Message & AI Response",
       "success": true,
-      "details": "User message: 'Hello! Can you tell me about artificial intelligen...', AI response: 'Hello! Absolutely, I\u2019d love to tell you about arti...'",
-      "timestamp": "2025-09-08T03:58:13.396661"
+      "details": "User message: 'Hello! Can you tell me about artificial intelligen...', AI response: 'Absolutely! Artificial intelligence, often referre...'",
+      "timestamp": "2025-09-08T03:59:55.019517"
     },
     {
       "test": "Get Messages",
       "success": true,
-      "details": "Retrieved 2 messages, Timestamps: ['03:58 AM', '03:58 AM']",
-      "timestamp": "2025-09-08T03:58:13.909019"
+      "details": "Retrieved 2 messages, Timestamps: ['03:59 AM', '03:59 AM']",
+      "timestamp": "2025-09-08T03:59:55.529307"
     },
     {
       "test": "Chat Title Auto-Generation",
-      "success": false,
-      "details": "Failed to retrieve updated chat",
-      "timestamp": "2025-09-08T03:58:20.153705"
+      "success": true,
+      "details": "Title auto-generated: 'Benefits of Renewable Energy'",
+      "timestamp": "2025-09-08T04:00:02.213824"
     },
     {
       "test": "Error Handling - Invalid Chat ID",
       "success": true,
       "details": "Correctly returned 404 for invalid ID",
-      "timestamp": "2025-09-08T03:58:20.663154"
+      "timestamp": "2025-09-08T04:00:02.771870"
     },
     {
       "test": "Error Handling - Missing Fields",
       "success": true,
       "details": "Correctly returned 422 for missing fields",
-      "timestamp": "2025-09-08T03:58:21.172502"
+      "timestamp": "2025-09-08T04:00:03.279274"
     },
     {
       "test": "AI Service Integration",
       "success": true,
-      "details": "AI correctly responded: '2 + 2 equals 4! If you have more math questions or need help with something else, feel free to ask!...'",
-      "timestamp": "2025-09-08T03:58:22.418125"
+      "details": "AI correctly responded: '2 + 2 equals 4! If you have any more math questions or anything else on your mind, feel free to ask!...'",
+      "timestamp": "2025-09-08T04:00:04.578568"
     },
     {
       "test": "Delete Chat",
       "success": true,
-      "details": "Chat e928bf7c-2f8d-493e-8307-38f1124e5878 deleted successfully",
-      "timestamp": "2025-09-08T03:58:22.930500"
+      "details": "Chat 1c8abc70-795f-4f58-9ff2-a6052ba643a1 deleted successfully",
+      "timestamp": "2025-09-08T04:00:05.088291"
     }
   ],
-  "timestamp": "2025-09-08T03:58:23.432044"
+  "timestamp": "2025-09-08T04:00:05.589800"
 }
