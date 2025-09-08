@@ -1,21 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Plus, User, Settings, Menu, MessageSquare, Edit3, Trash2 } from "lucide-react";
+import { Send, Plus, User, Settings, Menu, MessageSquare, Edit3, Trash2, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Separator } from "./ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { mockChatHistory, mockMessages } from "../utils/mockData";
+import { chatAPI } from "../utils/api";
 import { useToast } from "../hooks/use-toast";
 
 const ChatInterface = () => {
-  const [messages, setMessages] = useState(mockMessages);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [chatHistory, setChatHistory] = useState(mockChatHistory);
-  const [currentChatId, setCurrentChatId] = useState(1);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [currentChatId, setCurrentChatId] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingChats, setIsLoadingChats] = useState(true);
   const messagesEndRef = useRef(null);
   const { toast } = useToast();
 
@@ -27,31 +29,82 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Load chat history on component mount
+  useEffect(() => {
+    loadChatHistory();
+  }, []);
+
+  const loadChatHistory = async () => {
+    try {
+      setIsLoadingChats(true);
+      const chats = await chatAPI.getChats();
+      setChatHistory(chats);
+      
+      // If we have chats but no current chat selected, select the first one
+      if (chats.length > 0 && !currentChatId) {
+        await selectChat(chats[0].id);
+      }
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load chat history",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoadingChats(false);
+    }
+  };
+
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || isTyping) return;
 
-    const newMessage = {
-      id: Date.now(),
-      text: inputValue,
-      sender: "user",
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+    // If no current chat, create one first
+    if (!currentChatId) {
+      await startNewChat();
+      // Don't return here, let the message be sent to the new chat
+    }
 
-    setMessages(prev => [...prev, newMessage]);
+    const messageText = inputValue;
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
-        id: Date.now() + 1,
-        text: "I'm a mock ChatGPT response. In the full version, this would be connected to a real AI backend!",
-        sender: "ai",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, aiResponse]);
+    try {
+      const response = await chatAPI.sendMessage(currentChatId, messageText);
+      
+      // Add both user message and AI response to messages
+      setMessages(prev => [
+        ...prev,
+        {
+          id: response.userMessage.id,
+          text: response.userMessage.text,
+          sender: response.userMessage.sender,
+          timestamp: response.userMessage.timestamp
+        },
+        {
+          id: response.aiResponse.id,
+          text: response.aiResponse.text,
+          sender: response.aiResponse.sender,
+          timestamp: response.aiResponse.timestamp
+        }
+      ]);
+
+      // Refresh chat history to update message counts and titles
+      await loadChatHistory();
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      toast({
+        title: "Error", 
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+      
+      // Put the message back in the input field
+      setInputValue(messageText);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -61,76 +114,165 @@ const ChatInterface = () => {
     }
   };
 
-  const startNewChat = () => {
-    const newChatId = Date.now();
-    const newChat = {
-      id: newChatId,
-      title: "New Chat",
-      preview: "Start a conversation...",
-      timestamp: "now"
-    };
-    setChatHistory(prev => [newChat, ...prev]);
-    setCurrentChatId(newChatId);
-    setMessages([]);
-    setSidebarOpen(false);
-    toast({
-      title: "New chat started",
-      description: "Ready for your questions!",
-    });
+  const startNewChat = async () => {
+    try {
+      setIsLoading(true);
+      const newChat = await chatAPI.createChat();
+      
+      // Update chat history
+      setChatHistory(prev => [newChat, ...prev]);
+      
+      // Switch to new chat
+      setCurrentChatId(newChat.id);
+      setMessages([]);
+      setSidebarOpen(false);
+      
+      toast({
+        title: "New chat started",
+        description: "Ready for your questions!",
+      });
+      
+      return newChat.id;
+    } catch (error) {
+      console.error('Error creating new chat:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create new chat",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const selectChat = (chatId) => {
-    setCurrentChatId(chatId);
-    // In a real app, this would load the messages for that chat
-    setMessages(mockMessages);
-    setSidebarOpen(false);
+  const selectChat = async (chatId) => {
+    try {
+      setIsLoading(true);
+      setCurrentChatId(chatId);
+      
+      // Load messages for the selected chat
+      const messages = await chatAPI.getMessages(chatId);
+      setMessages(messages);
+      setSidebarOpen(false);
+      
+    } catch (error) {
+      console.error('Error loading chat messages:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load chat messages",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteChat = async (chatId, e) => {
+    e.stopPropagation(); // Prevent chat selection when deleting
+    
+    try {
+      await chatAPI.deleteChat(chatId);
+      
+      // Remove from chat history
+      setChatHistory(prev => prev.filter(chat => chat.id !== chatId));
+      
+      // If we deleted the current chat, clear messages and reset current chat
+      if (currentChatId === chatId) {
+        setCurrentChatId(null);
+        setMessages([]);
+      }
+      
+      toast({
+        title: "Chat deleted",
+        description: "Chat has been successfully deleted",
+      });
+      
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete chat",
+        variant: "destructive"
+      });
+    }
   };
 
   const Sidebar = () => (
     <div className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
       <div className="p-4">
-        <Button onClick={startNewChat} className="w-full flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-          <Plus size={16} />
+        <Button 
+          onClick={startNewChat} 
+          disabled={isLoading}
+          className="w-full flex items-center gap-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          {isLoading ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Plus size={16} />
+          )}
           New Chat
         </Button>
       </div>
       
       <ScrollArea className="flex-1 px-4">
-        <div className="space-y-2">
-          {chatHistory.map((chat) => (
-            <div
-              key={chat.id}
-              onClick={() => selectChat(chat.id)}
-              className={`group p-3 rounded-lg cursor-pointer transition-colors ${
-                currentChatId === chat.id
-                  ? "bg-gray-200 dark:bg-gray-700"
-                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {chat.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {chat.preview}
-                  </p>
+        {isLoadingChats ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="animate-spin" size={24} />
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {chatHistory.map((chat) => (
+              <div
+                key={chat.id}
+                onClick={() => selectChat(chat.id)}
+                className={`group p-3 rounded-lg cursor-pointer transition-colors ${
+                  currentChatId === chat.id
+                    ? "bg-gray-200 dark:bg-gray-700"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      {chat.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {chat.preview}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 w-6 p-0"
+                      onClick={(e) => deleteChat(chat.id, e)}
+                    >
+                      <Trash2 size={12} />
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                    <Edit3 size={12} />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                    <Trash2 size={12} />
-                  </Button>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                    {chat.timestamp}
+                  </span>
+                  {chat.messageCount > 0 && (
+                    <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">
+                      {chat.messageCount}
+                    </span>
+                  )}
                 </div>
               </div>
-              <span className="text-xs text-gray-400 dark:text-gray-500">
-                {chat.timestamp}
-              </span>
-            </div>
-          ))}
-        </div>
+            ))}
+            
+            {chatHistory.length === 0 && !isLoadingChats && (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                <MessageSquare size={32} className="mx-auto mb-2 opacity-50" />
+                <p className="text-sm">No chats yet</p>
+                <p className="text-xs">Start a new conversation!</p>
+              </div>
+            )}
+          </div>
+        )}
       </ScrollArea>
       
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
@@ -198,7 +340,11 @@ const ChatInterface = () => {
         {/* Messages Area */}
         <ScrollArea className="flex-1 p-4">
           <div className="max-w-3xl mx-auto space-y-6">
-            {messages.length === 0 ? (
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="animate-spin" size={32} />
+              </div>
+            ) : messages.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MessageSquare size={24} className="text-white" />
@@ -214,7 +360,7 @@ const ChatInterface = () => {
               messages.map((message) => (
                 <div
                   key={message.id}
-                  className={`flex gap-4 ${
+                  className={`flex gap-4 message-bubble ${
                     message.sender === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
@@ -232,7 +378,7 @@ const ChatInterface = () => {
                         : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
                     }`}
                   >
-                    <p className="text-sm leading-relaxed">{message.text}</p>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
                     <span className="text-xs opacity-70 mt-1 block">
                       {message.timestamp}
                     </span>
@@ -278,20 +424,24 @@ const ChatInterface = () => {
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Message ChatGPT..."
+                  disabled={isTyping}
                   className="pr-12 py-3 text-sm border-gray-200 dark:border-gray-700 focus:border-blue-500 dark:focus:border-blue-400 rounded-xl bg-white dark:bg-gray-800"
-                  multiline
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim() || isTyping}
                   className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 rounded-lg"
                 >
-                  <Send size={16} />
+                  {isTyping ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Send size={16} />
+                  )}
                 </Button>
               </div>
             </div>
             <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-2">
-              This is a mock ChatGPT interface. In the full version, messages would be powered by real AI.
+              ChatGPT can make mistakes. Check important info. Powered by Emergent AI.
             </p>
           </div>
         </div>
