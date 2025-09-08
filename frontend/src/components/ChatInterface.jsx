@@ -457,7 +457,10 @@ const ChatInterface = () => {
                     Hi there, John
                   </h1>
                   <h2 className="text-xl font-bold text-gray-700 mb-4">How may I help you today?</h2>
-                  <p className="text-base text-gray-500">I can help you find properties, answer questions about real estate, and provide personalized recommendations.</p>
+                  <div className="text-base text-gray-500">
+                    <p>I can help you find properties and answer questions about real estate.</p>
+                    <p>I also provide personalized recommendations.</p>
+                  </div>
                 </div>
 
                 {/* Input Area - Moved Above Suggestion Cards */}
