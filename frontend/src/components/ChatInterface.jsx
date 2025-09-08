@@ -451,17 +451,17 @@ const ChatInterface = () => {
                 </div>
 
                 {/* Suggestion Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
                   {suggestionCards.map((card, index) => (
                     <Card 
                       key={index} 
                       className="cursor-pointer hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300"
                       onClick={() => handleSuggestionClick(card)}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <div className="text-2xl">{card.icon}</div>
-                          <p className="text-sm text-gray-700 font-medium leading-relaxed">
+                      <CardContent className="p-4">
+                        <div className="flex flex-col items-center text-center gap-2">
+                          <div className="text-xl">{card.icon}</div>
+                          <p className="text-xs text-gray-700 font-medium leading-relaxed">
                             {card.title}
                           </p>
                         </div>
