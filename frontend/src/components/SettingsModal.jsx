@@ -153,12 +153,11 @@ const SettingsModal = ({ isOpen, onClose }) => {
         </DialogHeader>
         
         <Tabs defaultValue="general" className="flex-1">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="models">Models</TabsTrigger>
             <TabsTrigger value="data">Data</TabsTrigger>
             <TabsTrigger value="api">API</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
           </TabsList>
 
           <div className="overflow-y-auto max-h-[60vh] mt-4">
