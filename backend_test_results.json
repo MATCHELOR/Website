@@ -1,83 +1,89 @@
 {
   "summary": {
     "passed": 12,
-    "failed": 0,
-    "total": 12,
-    "success_rate": 100.0
+    "failed": 1,
+    "total": 13,
+    "success_rate": 92.3076923076923
   },
   "tests": [
     {
       "test": "API Health Check",
       "success": true,
-      "details": "Status: 200, Message: ChatGPT Clone API is running!",
-      "timestamp": "2025-09-08T03:59:46.932371"
+      "details": "Status: 200, Message: Matchelor Real Estate AI API is running!",
+      "timestamp": "2025-09-08T06:21:44.330988"
     },
     {
       "test": "Create Chat",
       "success": true,
-      "details": "Chat ID: 1c8abc70-795f-4f58-9ff2-a6052ba643a1, Title: Test Chat Session",
-      "timestamp": "2025-09-08T03:59:47.442381"
+      "details": "Chat ID: a70e2702-9fdc-4e30-bff8-0d76b342eefc, Title: Real Estate Consultation",
+      "timestamp": "2025-09-08T06:21:44.850928"
     },
     {
       "test": "Get All Chats",
       "success": true,
       "details": "Found 2 chats, Created chat found: True",
-      "timestamp": "2025-09-08T03:59:47.953318"
+      "timestamp": "2025-09-08T06:21:45.366157"
     },
     {
       "test": "Get Specific Chat",
       "success": true,
       "details": "Chat details retrieved, Messages count: 0",
-      "timestamp": "2025-09-08T03:59:48.464942"
+      "timestamp": "2025-09-08T06:21:45.876995"
+    },
+    {
+      "test": "Real Estate Property Query",
+      "success": true,
+      "details": "User query: 'Help me find a 3-bedroom house in downtown area wi...', AI response contains real estate content: True",
+      "timestamp": "2025-09-08T06:21:50.415870"
+    },
+    {
+      "test": "AI Identity Verification",
+      "success": false,
+      "details": "AI incorrectly identifies as ChatGPT instead of Matchelor",
+      "timestamp": "2025-09-08T06:21:52.263408"
     },
     {
       "test": "Update Chat Title",
       "success": true,
-      "details": "Title updated to: Updated Test Chat Title",
-      "timestamp": "2025-09-08T03:59:48.975297"
-    },
-    {
-      "test": "Send Message & AI Response",
-      "success": true,
-      "details": "User message: 'Hello! Can you tell me about artificial intelligen...', AI response: 'Absolutely! Artificial intelligence, often referre...'",
-      "timestamp": "2025-09-08T03:59:55.019517"
+      "details": "Title updated to: Property Search Consultation",
+      "timestamp": "2025-09-08T06:21:52.773615"
     },
     {
       "test": "Get Messages",
       "success": true,
-      "details": "Retrieved 2 messages, Timestamps: ['03:59 AM', '03:59 AM']",
-      "timestamp": "2025-09-08T03:59:55.529307"
+      "details": "Retrieved 4 messages, Timestamps: ['06:21 AM', '06:21 AM', '06:21 AM', '06:21 AM']",
+      "timestamp": "2025-09-08T06:21:53.286006"
     },
     {
       "test": "Chat Title Auto-Generation",
       "success": true,
-      "details": "Title auto-generated: 'Benefits of Renewable Energy'",
-      "timestamp": "2025-09-08T04:00:02.213824"
+      "details": "Title auto-generated: 'Searching for a Family Home'",
+      "timestamp": "2025-09-08T06:22:00.766426"
+    },
+    {
+      "test": "Database Persistence",
+      "success": true,
+      "details": "Messages properly persisted in database (6 total)",
+      "timestamp": "2025-09-08T06:22:13.807684"
     },
     {
       "test": "Error Handling - Invalid Chat ID",
       "success": true,
       "details": "Correctly returned 404 for invalid ID",
-      "timestamp": "2025-09-08T04:00:02.771870"
+      "timestamp": "2025-09-08T06:22:14.317311"
     },
     {
       "test": "Error Handling - Missing Fields",
       "success": true,
       "details": "Correctly returned 422 for missing fields",
-      "timestamp": "2025-09-08T04:00:03.279274"
-    },
-    {
-      "test": "AI Service Integration",
-      "success": true,
-      "details": "AI correctly responded: '2 + 2 equals 4! If you have any more math questions or anything else on your mind, feel free to ask!...'",
-      "timestamp": "2025-09-08T04:00:04.578568"
+      "timestamp": "2025-09-08T06:22:14.827152"
     },
     {
       "test": "Delete Chat",
       "success": true,
-      "details": "Chat 1c8abc70-795f-4f58-9ff2-a6052ba643a1 deleted successfully",
-      "timestamp": "2025-09-08T04:00:05.088291"
+      "details": "Chat a70e2702-9fdc-4e30-bff8-0d76b342eefc deleted successfully",
+      "timestamp": "2025-09-08T06:22:15.337380"
     }
   ],
-  "timestamp": "2025-09-08T04:00:05.589800"
+  "timestamp": "2025-09-08T06:22:15.838868"
 }
