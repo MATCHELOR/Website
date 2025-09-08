@@ -712,9 +712,10 @@ const ChatInterface = () => {
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className={`text-xs text-white ${
                             message.sender === "user" 
-                              ? "bg-blue-500" 
+                              ? "" 
                               : "bg-green-500"
-                          }`}>
+                          }`}
+                          style={message.sender === "user" ? { backgroundColor: '#153009' } : {}}>
                             {message.sender === "user" ? "J" : "AI"}
                           </AvatarFallback>
                         </Avatar>
