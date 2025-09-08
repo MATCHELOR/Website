@@ -776,7 +776,7 @@ const ChatInterface = () => {
                   onKeyPress={handleKeyPress}
                   placeholder="Ask whatever you want..."
                   disabled={isTyping}
-                  className="pr-20 pl-16 py-6 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100 h-14"
+                  className="pr-20 pl-20 py-6 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100 h-14"
                 />
                 
                 {/* Left icons */}
@@ -785,7 +785,7 @@ const ChatInterface = () => {
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-gray-200"
-                    onClick={() => toast({ title: "Feature coming soon!", description: "File attachment will be available soon" })}
+                    onClick={() => fileInputRef.current?.click()}
                   >
                     <Paperclip size={16} className="text-gray-400" />
                   </Button>
@@ -793,7 +793,7 @@ const ChatInterface = () => {
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-gray-200"
-                    onClick={() => toast({ title: "Feature coming soon!", description: "Image upload will be available soon" })}
+                    onClick={() => imageInputRef.current?.click()}
                   >
                     <Image size={16} className="text-gray-400" />
                   </Button>
@@ -815,7 +815,84 @@ const ChatInterface = () => {
                     )}
                   </Button>
                 </div>
+
+                {/* Hidden file inputs */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.txt,.xlsx,.pptx"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
               </div>
+
+              {/* Attachment Preview */}
+              {(selectedFiles.length > 0 || selectedImages.length > 0) && (
+                <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      Attachments ({selectedFiles.length + selectedImages.length})
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearAllAttachments}
+                      className="text-red-600 hover:text-red-700 text-xs"
+                    >
+                      Clear all
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {/* Files */}
+                    {selectedFiles.map((file, index) => (
+                      <div key={`file-${index}`} className="flex items-center justify-between bg-white p-2 rounded border">
+                        <div className="flex items-center gap-2">
+                          <Paperclip size={14} className="text-gray-400" />
+                          <span className="text-sm text-gray-700 truncate">{file.name}</span>
+                          <span className="text-xs text-gray-500">({(file.size / 1024).toFixed(1)} KB)</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                          className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                        >
+                          ×
+                        </Button>
+                      </div>
+                    ))}
+                    
+                    {/* Images */}
+                    {selectedImages.map((image, index) => (
+                      <div key={`image-${index}`} className="flex items-center justify-between bg-white p-2 rounded border">
+                        <div className="flex items-center gap-2">
+                          <Image size={14} className="text-gray-400" />
+                          <span className="text-sm text-gray-700 truncate">{image.name}</span>
+                          <span className="text-xs text-gray-500">({(image.size / 1024).toFixed(1)} KB)</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeImage(index)}
+                          className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                        >
+                          ×
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <p className="text-xs text-gray-400 text-center mt-3">
                 By using Matchelor, you agree to our Terms of Service and Privacy Policy.
