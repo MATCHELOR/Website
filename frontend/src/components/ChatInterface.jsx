@@ -27,20 +27,20 @@ const ChatInterface = () => {
 
   const suggestionCards = [
     {
-      title: "Write a to-do list for a personal project or task",
-      icon: "📝"
+      title: "Help me find properties in a specific neighborhood with good schools",
+      icon: "🏠"
     },
     {
-      title: "Generate an email or reply to a job offer",
-      icon: "✉️"
+      title: "What questions should I ask during a property viewing?",
+      icon: "❓"
     },
     {
-      title: "Summarize this article or text for me in one paragraph",
-      icon: "📄"
+      title: "Calculate mortgage payments and affordability for my budget",
+      icon: "💰"
     },
     {
-      title: "How does AI work in a technical capacity",
-      icon: "🤖"
+      title: "Explain the home buying process step by step",
+      icon: "📋"
     }
   ];
 
