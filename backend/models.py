@@ -27,6 +27,7 @@ class ChatUpdateRequest(BaseModel):
 class MessageCreateRequest(BaseModel):
     message: str
     sessionId: Optional[str] = None
+    model: Optional[str] = Field(default="gpt-4o-mini")
 
 class ChatResponse(BaseModel):
     id: str
