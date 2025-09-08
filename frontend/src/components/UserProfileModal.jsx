@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { 
   User, X, Edit2, Save, Calendar, Zap, TrendingUp, 
-  Star, Shield, CreditCard, Settings, LogOut
+  Star, Shield, CreditCard, Settings, LogOut, DollarSign,
+  Check, AlertCircle
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
@@ -12,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Progress } from "./ui/progress";
 import { Separator } from "./ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { useToast } from "../hooks/use-toast";
 
 const UserProfileModal = ({ isOpen, onClose }) => {
