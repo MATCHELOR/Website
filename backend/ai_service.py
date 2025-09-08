@@ -46,8 +46,16 @@ class AIService:
                 system_message=system_message
             )
 
-            # Use GPT-4o-mini as default model (cost-effective)
-            chat.with_model("openai", "gpt-4o-mini")
+            # Use the specified model (default: GPT-4o-mini)
+            if model.startswith("gpt-"):
+                chat.with_model("openai", model)
+            elif model.startswith("claude-"):
+                chat.with_model("anthropic", model)
+            elif model.startswith("gemini-"):
+                chat.with_model("gemini", model)
+            else:
+                # Fallback to default
+                chat.with_model("openai", "gpt-4o-mini")
 
             # If we have chat history, we should restore it
             # Note: For now, we'll send the current message
