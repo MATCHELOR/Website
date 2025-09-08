@@ -490,61 +490,73 @@ const ChatInterface = () => {
             </div>
           ) : (
             /* Chat Messages */
-            <ScrollArea className="h-full p-4">
-              <div className="max-w-3xl mx-auto space-y-6">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex gap-4 ${
-                      message.sender === "user" ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    {message.sender === "ai" && (
-                      <Avatar className="h-8 w-8 mt-1">
-                        <AvatarFallback className="bg-green-500 text-white text-xs">
-                          AI
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
+            <ScrollArea className="h-full">
+              <div className="max-w-4xl mx-auto px-4 py-4">
+                <div className="space-y-4">
+                  {messages.map((message) => (
                     <div
-                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                        message.sender === "user"
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-100 text-gray-900"
+                      key={message.id}
+                      className={`flex items-start gap-3 ${
+                        message.sender === "user" ? "flex-row-reverse" : "flex-row"
                       }`}
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
-                      <span className="text-xs opacity-70 mt-2 block">
-                        {message.timestamp}
-                      </span>
-                    </div>
-                    {message.sender === "user" && (
-                      <Avatar className="h-8 w-8 mt-1">
-                        <AvatarFallback className="bg-blue-500 text-white text-xs">
-                          J
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                  </div>
-                ))}
-                
-                {isTyping && (
-                  <div className="flex gap-4 justify-start">
-                    <Avatar className="h-8 w-8 mt-1">
-                      <AvatarFallback className="bg-green-500 text-white text-xs">
-                        AI
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="bg-gray-100 rounded-2xl px-4 py-3">
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      {/* Avatar */}
+                      <div className="flex-shrink-0">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className={`text-xs text-white ${
+                            message.sender === "user" 
+                              ? "bg-blue-500" 
+                              : "bg-green-500"
+                          }`}>
+                            {message.sender === "user" ? "J" : "AI"}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      
+                      {/* Message Content */}
+                      <div className={`flex-1 max-w-[70%] ${
+                        message.sender === "user" ? "text-right" : "text-left"
+                      }`}>
+                        <div
+                          className={`inline-block rounded-2xl px-4 py-3 ${
+                            message.sender === "user"
+                              ? "bg-blue-500 text-white"
+                              : "bg-gray-100 text-gray-900"
+                          }`}
+                        >
+                          <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                            {message.text}
+                          </p>
+                          <span className="text-xs opacity-70 mt-1 block">
+                            {message.timestamp}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
+                  ))}
+                  
+                  {isTyping && (
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-green-500 text-white text-xs">
+                            AI
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      <div className="flex-1 max-w-[70%]">
+                        <div className="inline-block bg-gray-100 rounded-2xl px-4 py-3">
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
               </div>
             </ScrollArea>
           )}
