@@ -274,15 +274,41 @@ const ChatInterface = () => {
     <div className="w-64 bg-white border-r border-gray-100 flex flex-col h-full">
       {/* Sidebar Header */}
       <div className="p-3 border-b border-gray-100">
-        <Button 
-          onClick={startNewChat} 
-          disabled={isLoading}
-          variant="ghost"
-          className="w-full justify-start text-sm font-normal px-3 py-2 h-auto"
-        >
-          <Plus size={16} className="mr-2" />
-          New chat
-        </Button>
+        <div className="flex items-center justify-between">
+          <Button 
+            onClick={startNewChat} 
+            disabled={isLoading}
+            variant="ghost"
+            className="flex-1 justify-start text-sm font-normal px-3 py-2 h-auto mr-2"
+          >
+            <Plus size={16} className="mr-2" />
+            New chat
+          </Button>
+          
+          {/* Delete All Chats Button */}
+          {chatHistory.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                >
+                  <MoreHorizontal size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  className="text-red-600 focus:text-red-600"
+                  onClick={() => setDeleteAllDialogOpen(true)}
+                >
+                  <Trash2 size={14} className="mr-2" />
+                  Clear all chats
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
       
       {/* Chat History */}
@@ -297,14 +323,14 @@ const ChatInterface = () => {
               <div
                 key={chat.id}
                 onClick={() => selectChat(chat.id)}
-                className={`group px-3 py-2 rounded-lg cursor-pointer transition-colors text-sm mb-1 ${
+                className={`group px-3 py-2 rounded-lg cursor-pointer transition-colors text-sm mb-1 relative ${
                   currentChatId === chat.id
                     ? "bg-gray-100"
                     : "hover:bg-gray-50"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 pr-2">
                     <p className="text-gray-900 truncate font-medium">
                       {chat.title}
                     </p>
@@ -313,8 +339,8 @@ const ChatInterface = () => {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="h-6 w-6 p-0"
-                      onClick={(e) => deleteChat(chat.id, e)}
+                      className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
+                      onClick={(e) => handleDeleteClick(chat.id, e)}
                     >
                       <Trash2 size={12} />
                     </Button>
@@ -322,6 +348,14 @@ const ChatInterface = () => {
                 </div>
               </div>
             ))}
+            
+            {chatHistory.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                <MessageSquare size={32} className="mx-auto mb-2 opacity-50" />
+                <p className="text-sm">No chats yet</p>
+                <p className="text-xs">Start a new conversation!</p>
+              </div>
+            )}
           </div>
         )}
       </ScrollArea>
