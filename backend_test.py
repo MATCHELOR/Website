@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive Backend Testing for ChatGPT Clone
+Comprehensive Backend Testing for Matchelor Real Estate AI
 Tests all API endpoints, AI integration, and database operations
 """
 
