@@ -614,7 +614,7 @@ const ChatInterface = () => {
             </div>
             
             <p className="text-xs text-gray-400 text-center mt-3">
-              ChatGPT can make mistakes. Check important info.
+              Matchelor can make mistakes. Check important info.
             </p>
           </div>
         </div>
