@@ -8,6 +8,8 @@ import { Separator } from "./ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { chatAPI } from "../utils/api";
 import { useToast } from "../hooks/use-toast";
+import SettingsModal from "./SettingsModal";
+import UserProfileModal from "./UserProfileModal";
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
@@ -18,6 +20,8 @@ const ChatInterface = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingChats, setIsLoadingChats] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const { toast } = useToast();
 
@@ -276,7 +280,10 @@ const ChatInterface = () => {
       </ScrollArea>
       
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer">
+        <div 
+          className="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
+          onClick={() => setProfileOpen(true)}
+        >
           <Avatar className="h-8 w-8">
             <AvatarFallback>
               <User size={16} />
@@ -286,7 +293,14 @@ const ChatInterface = () => {
             <p className="text-sm font-medium text-gray-900 dark:text-white">User</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">Free Plan</p>
           </div>
-          <Settings size={16} className="text-gray-400" />
+          <Settings 
+            size={16} 
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer" 
+            onClick={(e) => {
+              e.stopPropagation();
+              setSettingsOpen(true);
+            }}
+          />
         </div>
       </div>
     </div>
@@ -326,10 +340,17 @@ const ChatInterface = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setSettingsOpen(true)}
+            >
               <Settings size={16} />
             </Button>
-            <Avatar className="h-8 w-8">
+            <Avatar 
+              className="h-8 w-8 cursor-pointer"
+              onClick={() => setProfileOpen(true)}
+            >
               <AvatarFallback>
                 <User size={16} />
               </AvatarFallback>
@@ -446,6 +467,18 @@ const ChatInterface = () => {
           </div>
         </div>
       </div>
+
+      {/* Settings Modal */}
+      <SettingsModal 
+        isOpen={settingsOpen} 
+        onClose={() => setSettingsOpen(false)} 
+      />
+
+      {/* User Profile Modal */}
+      <UserProfileModal 
+        isOpen={profileOpen} 
+        onClose={() => setProfileOpen(false)} 
+      />
     </div>
   );
 };
