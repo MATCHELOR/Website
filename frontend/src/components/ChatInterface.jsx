@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Send, Plus, User, Settings, Menu, MessageSquare, Edit3, Trash2, Loader2, Paperclip, Image } from "lucide-react";
+import { Send, Plus, User, Settings, Menu, MessageSquare, Edit3, Trash2, Loader2, Paperclip, Image, MoreHorizontal, AlertTriangle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
