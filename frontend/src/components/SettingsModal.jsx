@@ -460,7 +460,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                   
                   <div className="pt-4 border-t">
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      © 2025 ChatGPT Clone. Built with ❤️ using Emergent AI.
+                      © 2025 Matchelor. Built with ❤️ using Emergent AI.
                     </p>
                   </div>
                 </CardContent>
