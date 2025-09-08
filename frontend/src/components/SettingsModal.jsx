@@ -82,7 +82,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `chatgpt-export-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `matchelor-export-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
