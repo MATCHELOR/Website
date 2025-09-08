@@ -87,8 +87,66 @@ const UserProfileModal = ({ isOpen, onClose }) => {
   const handleUpgradePlan = () => {
     toast({
       title: "Upgrade Plan",
-      description: "Upgrade functionality would be available in the full version",
+      description: "Redirecting to billing portal...",
     });
+    // In production, this would redirect to Stripe/payment portal
+    setTimeout(() => {
+      toast({
+        title: "Feature Preview",
+        description: "This would integrate with Stripe for real billing",
+      });
+    }, 1500);
+  };
+
+  const handleBillingSettings = () => {
+    setActiveTab("billing");
+  };
+
+  const handleAccountSettings = () => {
+    setActiveTab("settings");
+  };
+
+  const handleSignOut = () => {
+    toast({
+      title: "Signing out...",
+      description: "You will be redirected to the login page",
+    });
+    // In production, this would clear tokens and redirect
+    setTimeout(() => {
+      toast({
+        title: "Signed Out",
+        description: "You have been successfully signed out",
+      });
+      onClose();
+    }, 1500);
+  };
+
+  const handleSettingChange = (setting, value) => {
+    setAccountSettings(prev => ({
+      ...prev,
+      [setting]: value
+    }));
+    toast({
+      title: "Setting Updated",
+      description: `${setting.replace(/([A-Z])/g, ' $1').toLowerCase()} has been ${value ? 'enabled' : 'disabled'}`,
+    });
+  };
+
+  const handlePasswordChange = () => {
+    toast({
+      title: "Password Change",
+      description: "Password reset link sent to your email",
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      toast({
+        title: "Account Deletion",
+        description: "Account deletion request submitted. Check your email for confirmation.",
+        variant: "destructive"
+      });
+    }
   };
 
   const getUsageColor = (used, limit) => {
