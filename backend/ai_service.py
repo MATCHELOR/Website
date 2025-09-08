@@ -22,7 +22,8 @@ class AIService:
         self, 
         message: str, 
         chat_history: List[Dict[str, Any]] = None,
-        session_id: str = None
+        session_id: str = None,
+        model: str = "gpt-4o-mini"
     ) -> str:
         """
         Send a message to AI and get response
