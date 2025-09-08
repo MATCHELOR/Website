@@ -460,7 +460,58 @@ const ChatInterface = () => {
                   <p className="text-base text-gray-500">Use one of the most common prompts below or use your own to begin</p>
                 </div>
 
-                {/* Suggestion Cards */}
+                {/* Input Area - Moved Above Suggestion Cards */}
+                <div className="mb-8">
+                  <div className="relative">
+                    <Input
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Ask whatever you want..."
+                      disabled={isTyping}
+                      className="pr-20 pl-12 py-6 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100 h-14"
+                    />
+                    
+                    {/* Left icons */}
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-gray-200"
+                        onClick={() => toast({ title: "Feature coming soon!", description: "File attachment will be available soon" })}
+                      >
+                        <Paperclip size={16} className="text-gray-400" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 hover:bg-gray-200"
+                        onClick={() => toast({ title: "Feature coming soon!", description: "Image upload will be available soon" })}
+                      >
+                        <Image size={16} className="text-gray-400" />
+                      </Button>
+                    </div>
+
+                    {/* Send button */}
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Button
+                        onClick={() => handleSendMessage()}
+                        disabled={!inputValue.trim() || isTyping}
+                        size="sm"
+                        className="h-10 w-10 p-0 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100"
+                        variant="secondary"
+                      >
+                        {isTyping ? (
+                          <Loader2 size={18} className="animate-spin text-gray-600" />
+                        ) : (
+                          <Send size={18} className="text-gray-600" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Suggestion Cards - Now Below Input */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
                   {suggestionCards.map((card, index) => (
                     <Card 
@@ -469,19 +520,16 @@ const ChatInterface = () => {
                       onClick={() => handleSuggestionClick(card)}
                     >
                       <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="text-xl flex-shrink-0">{card.icon}</div>
-                          <p className="text-xs text-gray-700 font-medium leading-relaxed">
-                            {card.title}
-                          </p>
-                        </div>
+                        <p className="text-xs text-gray-700 font-medium leading-relaxed">
+                          {card.title}
+                        </p>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
 
                 {/* Refresh Prompts */}
-                <div className="text-center">
+                <div className="text-center mb-4">
                   <Button 
                     variant="outline" 
                     size="sm"
@@ -495,6 +543,13 @@ const ChatInterface = () => {
                   >
                     🔄 Refresh Prompts
                   </Button>
+                </div>
+
+                {/* Privacy Disclaimer */}
+                <div className="text-center">
+                  <p className="text-xs text-gray-400">
+                    By using Matchelor, you agree to our Terms of Service and Privacy Policy.
+                  </p>
                 </div>
               </div>
             </div>
