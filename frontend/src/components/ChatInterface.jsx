@@ -528,23 +528,6 @@ const ChatInterface = () => {
                   ))}
                 </div>
 
-                {/* Refresh Prompts */}
-                <div className="text-center mb-4">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="text-gray-600 border-gray-200 hover:bg-gray-50"
-                    onClick={() => {
-                      toast({
-                        title: "Refreshed!",
-                        description: "New prompts coming soon",
-                      });
-                    }}
-                  >
-                    🔄 Refresh Prompts
-                  </Button>
-                </div>
-
                 {/* Privacy Disclaimer */}
                 <div className="text-center">
                   <p className="text-xs text-gray-400">
