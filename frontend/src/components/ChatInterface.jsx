@@ -439,43 +439,41 @@ const ChatInterface = () => {
         <div className="flex-1 overflow-hidden">
           {messages.length === 0 ? (
             /* Welcome Screen */
-            <div className="h-full flex flex-col items-center justify-center px-4">
-              <div className="max-w-3xl w-full">
+            <div className="h-full flex flex-col justify-center px-8">
+              <div className="max-w-4xl w-full">
                 {/* Welcome Message */}
-                <div className="text-center mb-12">
-                  <h1 className="text-4xl font-semibold text-gray-900 mb-2">
+                <div className="mb-16">
+                  <h1 className="text-5xl font-semibold text-gray-900 mb-3">
                     Hi there, <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">John</span>
                   </h1>
-                  <p className="text-xl text-gray-600 font-medium">What would you like to know?</p>
-                  <p className="text-sm text-gray-500 mt-2">Use one of the most common prompts below or use your own to begin</p>
+                  <p className="text-2xl text-gray-700 font-medium mb-3">What would you like to know?</p>
+                  <p className="text-base text-gray-500">Use one of the most common prompts below or use your own to begin</p>
                 </div>
 
                 {/* Suggestion Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                   {suggestionCards.map((card, index) => (
                     <Card 
                       key={index} 
-                      className="cursor-pointer hover:shadow-md transition-shadow border border-gray-200 hover:border-gray-300"
+                      className="cursor-pointer hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300 aspect-square flex items-center justify-center"
                       onClick={() => handleSuggestionClick(card)}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="text-2xl">{card.icon}</div>
-                          <p className="text-sm text-gray-700 font-medium leading-relaxed">
-                            {card.title}
-                          </p>
-                        </div>
+                      <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+                        <div className="text-3xl mb-4">{card.icon}</div>
+                        <p className="text-base text-gray-700 font-medium leading-relaxed">
+                          {card.title}
+                        </p>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
 
                 {/* Refresh Prompts */}
-                <div className="text-center">
+                <div>
                   <Button 
                     variant="outline" 
                     size="sm"
-                    className="text-gray-600 border-gray-200"
+                    className="text-gray-600 border-gray-200 hover:bg-gray-50"
                     onClick={() => {
                       toast({
                         title: "Refreshed!",
