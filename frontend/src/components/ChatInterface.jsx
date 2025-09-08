@@ -564,7 +564,7 @@ const ChatInterface = () => {
 
         {/* Input Area */}
         <div className="border-t border-gray-100 p-4 bg-white">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="relative">
               <Input
                 value={inputValue}
@@ -572,7 +572,7 @@ const ChatInterface = () => {
                 onKeyPress={handleKeyPress}
                 placeholder="Ask whatever you want..."
                 disabled={isTyping}
-                className="pr-20 pl-12 py-4 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                className="pr-20 pl-12 py-6 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100 h-14"
               />
               
               {/* Left icons */}
@@ -601,13 +601,13 @@ const ChatInterface = () => {
                   onClick={() => handleSendMessage()}
                   disabled={!inputValue.trim() || isTyping}
                   size="sm"
-                  className="h-8 w-8 p-0 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100"
+                  className="h-10 w-10 p-0 rounded-full bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100"
                   variant="secondary"
                 >
                   {isTyping ? (
-                    <Loader2 size={16} className="animate-spin text-gray-600" />
+                    <Loader2 size={18} className="animate-spin text-gray-600" />
                   ) : (
-                    <Send size={16} className="text-gray-600" />
+                    <Send size={18} className="text-gray-600" />
                   )}
                 </Button>
               </div>
