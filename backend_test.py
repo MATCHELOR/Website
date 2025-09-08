@@ -14,7 +14,7 @@ from typing import Dict, List, Any
 # Backend URL from frontend environment
 BACKEND_URL = "https://ai-chat-replica-17.preview.emergentagent.com/api"
 
-class ChatGPTBackendTester:
+class MatchelorBackendTester:
     def __init__(self):
         self.session = None
         self.test_results = []
@@ -48,7 +48,7 @@ class ChatGPTBackendTester:
             async with self.session.get(f"{BACKEND_URL}/") as response:
                 if response.status == 200:
                     data = await response.json()
-                    if "ChatGPT Clone API is running" in data.get("message", ""):
+                    if "Matchelor Real Estate AI API is running" in data.get("message", ""):
                         self.log_test("API Health Check", True, f"Status: {response.status}, Message: {data['message']}")
                         return True
                     else:
@@ -64,7 +64,7 @@ class ChatGPTBackendTester:
     async def test_create_chat(self):
         """Test 2: Create New Chat Session"""
         try:
-            chat_data = {"title": "Test Chat Session"}
+            chat_data = {"title": "Real Estate Consultation"}
             async with self.session.post(
                 f"{BACKEND_URL}/chats",
                 json=chat_data,
@@ -140,14 +140,108 @@ class ChatGPTBackendTester:
             self.log_test("Get Specific Chat", False, f"Exception: {str(e)}")
             return False
             
+    async def test_real_estate_property_query(self):
+        """Test 5: Real Estate Property Query"""
+        if not self.created_chat_id:
+            self.log_test("Real Estate Property Query", False, "No chat ID available")
+            return False
+            
+        try:
+            message_data = {
+                "message": "Help me find a 3-bedroom house in downtown area with good schools nearby",
+                "sessionId": self.created_chat_id
+            }
+            async with self.session.post(
+                f"{BACKEND_URL}/chats/{self.created_chat_id}/messages",
+                json=message_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    required_fields = ["userMessage", "aiResponse"]
+                    if all(field in data for field in required_fields):
+                        user_msg = data["userMessage"]
+                        ai_msg = data["aiResponse"]
+                        
+                        # Verify message structure
+                        msg_fields = ["id", "text", "sender", "timestamp", "chatId"]
+                        user_valid = all(field in user_msg for field in msg_fields)
+                        ai_valid = all(field in ai_msg for field in msg_fields)
+                        
+                        if user_valid and ai_valid and user_msg["sender"] == "user" and ai_msg["sender"] == "ai":
+                            # Check if AI response contains real estate related content
+                            ai_response_text = ai_msg["text"].lower()
+                            real_estate_keywords = ["property", "house", "home", "bedroom", "school", "location", "real estate", "neighborhood"]
+                            contains_real_estate_content = any(keyword in ai_response_text for keyword in real_estate_keywords)
+                            
+                            self.log_test("Real Estate Property Query", True, 
+                                        f"User query: '{user_msg['text'][:50]}...', AI response contains real estate content: {contains_real_estate_content}")
+                            return True
+                        else:
+                            self.log_test("Real Estate Property Query", False, "Invalid message structure")
+                            return False
+                    else:
+                        missing_fields = [field for field in required_fields if field not in data]
+                        self.log_test("Real Estate Property Query", False, f"Missing fields: {missing_fields}")
+                        return False
+                else:
+                    error_text = await response.text()
+                    self.log_test("Real Estate Property Query", False, f"Status: {response.status}, Error: {error_text}")
+                    return False
+        except Exception as e:
+            self.log_test("Real Estate Property Query", False, f"Exception: {str(e)}")
+            return False
+            
+    async def test_ai_identity_verification(self):
+        """Test 6: AI Identity Verification (Should identify as Matchelor)"""
+        if not self.created_chat_id:
+            self.log_test("AI Identity Verification", False, "No chat ID available")
+            return False
+            
+        try:
+            message_data = {
+                "message": "What is your name and what do you do?",
+                "sessionId": self.created_chat_id
+            }
+            async with self.session.post(
+                f"{BACKEND_URL}/chats/{self.created_chat_id}/messages",
+                json=message_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    ai_response = data.get("aiResponse", {}).get("text", "").lower()
+                    
+                    # Check if AI identifies itself correctly
+                    identifies_as_chatgpt = "chatgpt" in ai_response or "openai" in ai_response
+                    identifies_as_matchelor = "matchelor" in ai_response
+                    mentions_real_estate = "real estate" in ai_response or "property" in ai_response
+                    
+                    if identifies_as_matchelor and mentions_real_estate:
+                        self.log_test("AI Identity Verification", True, f"AI correctly identifies as Matchelor real estate assistant")
+                        return True
+                    elif identifies_as_chatgpt:
+                        self.log_test("AI Identity Verification", False, f"AI incorrectly identifies as ChatGPT instead of Matchelor")
+                        return False
+                    else:
+                        self.log_test("AI Identity Verification", False, f"AI identity unclear - Response: '{ai_response[:100]}...'")
+                        return False
+                else:
+                    error_text = await response.text()
+                    self.log_test("AI Identity Verification", False, f"Status: {response.status}, Error: {error_text}")
+                    return False
+        except Exception as e:
+            self.log_test("AI Identity Verification", False, f"Exception: {str(e)}")
+            return False
+            
     async def test_update_chat_title(self):
-        """Test 5: Update Chat Title"""
+        """Test 7: Update Chat Title"""
         if not self.created_chat_id:
             self.log_test("Update Chat Title", False, "No chat ID available")
             return False
             
         try:
-            new_title = "Updated Test Chat Title"
+            new_title = "Property Search Consultation"
             update_data = {"title": new_title}
             async with self.session.put(
                 f"{BACKEND_URL}/chats/{self.created_chat_id}",
@@ -170,55 +264,8 @@ class ChatGPTBackendTester:
             self.log_test("Update Chat Title", False, f"Exception: {str(e)}")
             return False
             
-    async def test_send_message_and_ai_response(self):
-        """Test 6: Send Message and Get AI Response"""
-        if not self.created_chat_id:
-            self.log_test("Send Message & AI Response", False, "No chat ID available")
-            return False
-            
-        try:
-            message_data = {
-                "message": "Hello! Can you tell me about artificial intelligence?",
-                "sessionId": self.created_chat_id
-            }
-            async with self.session.post(
-                f"{BACKEND_URL}/chats/{self.created_chat_id}/messages",
-                json=message_data,
-                headers={"Content-Type": "application/json"}
-            ) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    required_fields = ["userMessage", "aiResponse"]
-                    if all(field in data for field in required_fields):
-                        user_msg = data["userMessage"]
-                        ai_msg = data["aiResponse"]
-                        
-                        # Verify message structure
-                        msg_fields = ["id", "text", "sender", "timestamp", "chatId"]
-                        user_valid = all(field in user_msg for field in msg_fields)
-                        ai_valid = all(field in ai_msg for field in msg_fields)
-                        
-                        if user_valid and ai_valid and user_msg["sender"] == "user" and ai_msg["sender"] == "ai":
-                            self.log_test("Send Message & AI Response", True, 
-                                        f"User message: '{user_msg['text'][:50]}...', AI response: '{ai_msg['text'][:50]}...'")
-                            return True
-                        else:
-                            self.log_test("Send Message & AI Response", False, "Invalid message structure")
-                            return False
-                    else:
-                        missing_fields = [field for field in required_fields if field not in data]
-                        self.log_test("Send Message & AI Response", False, f"Missing fields: {missing_fields}")
-                        return False
-                else:
-                    error_text = await response.text()
-                    self.log_test("Send Message & AI Response", False, f"Status: {response.status}, Error: {error_text}")
-                    return False
-        except Exception as e:
-            self.log_test("Send Message & AI Response", False, f"Exception: {str(e)}")
-            return False
-            
     async def test_get_messages(self):
-        """Test 7: Get Messages from Chat"""
+        """Test 8: Get Messages from Chat"""
         if not self.created_chat_id:
             self.log_test("Get Messages", False, "No chat ID available")
             return False
@@ -244,7 +291,7 @@ class ChatGPTBackendTester:
             return False
             
     async def test_chat_title_auto_generation(self):
-        """Test 8: Chat Title Auto-Generation"""
+        """Test 9: Chat Title Auto-Generation for Real Estate"""
         try:
             # Create a new chat for this test
             chat_data = {"title": "New Chat"}
@@ -262,7 +309,7 @@ class ChatGPTBackendTester:
                 
             # Send first message to trigger title generation
             message_data = {
-                "message": "What are the benefits of renewable energy sources?",
+                "message": "I'm looking for a family home with 4 bedrooms and a large backyard in a safe neighborhood",
                 "sessionId": new_chat_id
             }
             async with self.session.post(
@@ -296,8 +343,56 @@ class ChatGPTBackendTester:
             self.log_test("Chat Title Auto-Generation", False, f"Exception: {str(e)}")
             return False
             
+    async def test_database_persistence(self):
+        """Test 10: Database Persistence Verification"""
+        if not self.created_chat_id:
+            self.log_test("Database Persistence", False, "No chat ID available")
+            return False
+            
+        try:
+            # Send a message
+            message_data = {
+                "message": "What should I consider when buying my first home?",
+                "sessionId": self.created_chat_id
+            }
+            async with self.session.post(
+                f"{BACKEND_URL}/chats/{self.created_chat_id}/messages",
+                json=message_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                if response.status != 200:
+                    self.log_test("Database Persistence", False, "Failed to send message")
+                    return False
+                    
+            # Wait a moment for database write
+            await asyncio.sleep(1)
+            
+            # Retrieve messages to verify persistence
+            async with self.session.get(f"{BACKEND_URL}/chats/{self.created_chat_id}/messages") as response:
+                if response.status == 200:
+                    messages = await response.json()
+                    if len(messages) >= 2:  # Should have at least user + AI messages
+                        # Check if the latest message matches what we sent
+                        user_messages = [msg for msg in messages if msg.get("sender") == "user"]
+                        if any("first home" in msg.get("text", "") for msg in user_messages):
+                            self.log_test("Database Persistence", True, f"Messages properly persisted in database ({len(messages)} total)")
+                            return True
+                        else:
+                            self.log_test("Database Persistence", False, "Sent message not found in database")
+                            return False
+                    else:
+                        self.log_test("Database Persistence", False, f"Expected messages not found in database")
+                        return False
+                else:
+                    self.log_test("Database Persistence", False, "Failed to retrieve messages from database")
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Database Persistence", False, f"Exception: {str(e)}")
+            return False
+            
     async def test_error_handling_invalid_chat_id(self):
-        """Test 9: Error Handling - Invalid Chat ID"""
+        """Test 11: Error Handling - Invalid Chat ID"""
         try:
             invalid_id = "invalid-chat-id-12345"
             async with self.session.get(f"{BACKEND_URL}/chats/{invalid_id}") as response:
@@ -312,7 +407,7 @@ class ChatGPTBackendTester:
             return False
             
     async def test_error_handling_missing_fields(self):
-        """Test 10: Error Handling - Missing Required Fields"""
+        """Test 12: Error Handling - Missing Required Fields"""
         try:
             # Try to send message without required field
             invalid_data = {}  # Missing 'message' field
@@ -331,52 +426,8 @@ class ChatGPTBackendTester:
             self.log_test("Error Handling - Missing Fields", False, f"Exception: {str(e)}")
             return False
             
-    async def test_ai_service_integration(self):
-        """Test 11: AI Service Integration"""
-        if not self.created_chat_id:
-            self.log_test("AI Service Integration", False, "No chat ID available")
-            return False
-            
-        try:
-            # Send a specific question to test AI integration
-            message_data = {
-                "message": "What is 2 + 2?",
-                "sessionId": self.created_chat_id
-            }
-            async with self.session.post(
-                f"{BACKEND_URL}/chats/{self.created_chat_id}/messages",
-                json=message_data,
-                headers={"Content-Type": "application/json"}
-            ) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    ai_response = data.get("aiResponse", {}).get("text", "")
-                    
-                    # Check if AI gave a reasonable response (should contain "4" for 2+2)
-                    if len(ai_response) > 0 and ("4" in ai_response or "four" in ai_response.lower()):
-                        self.log_test("AI Service Integration", True, f"AI correctly responded: '{ai_response[:100]}...'")
-                        return True
-                    elif len(ai_response) > 0:
-                        # AI responded but maybe with fallback message
-                        if "technical difficulties" in ai_response:
-                            self.log_test("AI Service Integration", False, "AI service returned fallback error message")
-                        else:
-                            self.log_test("AI Service Integration", True, f"AI responded (may be creative): '{ai_response[:100]}...'")
-                            return True
-                        return False
-                    else:
-                        self.log_test("AI Service Integration", False, "Empty AI response")
-                        return False
-                else:
-                    error_text = await response.text()
-                    self.log_test("AI Service Integration", False, f"Status: {response.status}, Error: {error_text}")
-                    return False
-        except Exception as e:
-            self.log_test("AI Service Integration", False, f"Exception: {str(e)}")
-            return False
-            
     async def test_delete_chat(self):
-        """Test 12: Delete Chat (run last to clean up)"""
+        """Test 13: Delete Chat (run last to clean up)"""
         if not self.created_chat_id:
             self.log_test("Delete Chat", False, "No chat ID available")
             return False
@@ -401,7 +452,7 @@ class ChatGPTBackendTester:
             
     async def run_all_tests(self):
         """Run all backend tests in sequence"""
-        print(f"🚀 Starting ChatGPT Clone Backend Tests")
+        print(f"🏠 Starting Matchelor Real Estate AI Backend Tests")
         print(f"📡 Backend URL: {BACKEND_URL}")
         print("=" * 60)
         
@@ -413,13 +464,14 @@ class ChatGPTBackendTester:
             self.test_create_chat,
             self.test_get_all_chats,
             self.test_get_specific_chat,
+            self.test_real_estate_property_query,
+            self.test_ai_identity_verification,
             self.test_update_chat_title,
-            self.test_send_message_and_ai_response,
             self.test_get_messages,
             self.test_chat_title_auto_generation,
+            self.test_database_persistence,
             self.test_error_handling_invalid_chat_id,
             self.test_error_handling_missing_fields,
-            self.test_ai_service_integration,
             self.test_delete_chat,
         ]
         
@@ -452,7 +504,7 @@ class ChatGPTBackendTester:
 
 async def main():
     """Main test runner"""
-    tester = ChatGPTBackendTester()
+    tester = MatchelorBackendTester()
     passed, failed, results = await tester.run_all_tests()
     
     # Save detailed results
