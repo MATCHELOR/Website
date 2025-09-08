@@ -547,7 +547,7 @@ const ChatInterface = () => {
                       onKeyPress={handleKeyPress}
                       placeholder="Ask whatever you want..."
                       disabled={isTyping}
-                      className="pr-20 pl-20 py-6 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100 h-14"
+                      className="pr-20 pl-24 py-6 text-base border-gray-200 focus:border-blue-400 rounded-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-blue-100 h-14"
                     />
                     
                     {/* Left icons */}
