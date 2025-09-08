@@ -279,8 +279,19 @@ const ChatInterface = () => {
 
   const Sidebar = () => (
     <div className="w-64 bg-white border-r border-gray-100 flex flex-col h-full">
-      {/* Sidebar Header */}
+      {/* Sidebar Header with Logo */}
       <div className="p-3 border-b border-gray-100">
+        {/* Logo Section */}
+        <div className="flex items-center gap-3 mb-3">
+          <img 
+            src="https://customer-assets.emergentagent.com/job_ai-chat-replica-17/artifacts/odu2ae3v_noBgBlack%20onlylogo.png" 
+            alt="Matchelor Logo" 
+            className="h-8 w-8 object-contain"
+          />
+          <span className="text-lg font-semibold text-gray-900">Matchelor</span>
+        </div>
+        
+        {/* New Chat Button */}
         <div className="flex items-center justify-between">
           <Button 
             onClick={startNewChat} 
