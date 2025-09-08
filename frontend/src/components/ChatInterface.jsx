@@ -727,9 +727,10 @@ const ChatInterface = () => {
                         <div
                           className={`inline-block rounded-2xl px-4 py-3 ${
                             message.sender === "user"
-                              ? "bg-blue-500 text-white"
+                              ? "text-white"
                               : "bg-gray-100 text-gray-900"
                           }`}
+                          style={message.sender === "user" ? { backgroundColor: '#153009' } : {}}
                         >
                           <p className="text-sm leading-relaxed whitespace-pre-wrap">
                             {message.text}
